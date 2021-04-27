@@ -3,7 +3,7 @@
     <h1 class="title">Personnaliser votre équipe</h1>
     <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nulla orci, efficitur non nibh.</p>
 
-    <form class="personnalisation_form">
+    <form class="personnalisation_form" @submit.prevent="signInButtonPressed">
       <section class="nom">
         <label for="nom_equipe" class="title_label">Nom de l'équipe</label>
         <input type="text" id="nom_equipe" name="nom_equipe" placeholder="Team">
@@ -16,38 +16,38 @@
 
         <div class="choix_couleur">
           <label class="container vert"><span class="show-for-sr">vert</span>
-            <input type="radio" id="vert" name="couleur" value="vert">
+            <input type="radio" id="vert" name="couleur" value="vert" @click="getCouleur('vert')">
             <span class="checkmark"></span>
           </label>
 
           <label class="container jaune"><span class="show-for-sr">jaune</span>
-            <input type="radio" id="jaune" name="couleur" value="jaune">
+            <input type="radio" id="jaune" name="couleur" value="jaune" @click="getCouleur('jaune')">
             <span class="checkmark"></span>
           </label>
 
           <label class="container orange"><span class="show-for-sr">orange</span>
-            <input type="radio" checked="checked" id="orange" name="couleur" value="orange">
+            <input type="radio" checked="checked" id="orange" name="couleur" value="orange" @click="getCouleur('orange')">
             <span class="checkmark"></span>
           </label>
 
           <label class="container rouge"><span class="show-for-sr">rouge</span>
-            <input type="radio" id="rouge" name="couleur" value="rouge">
+            <input type="radio" id="rouge" name="couleur" value="rouge" @click="getCouleur('rouge')">
             <span class="checkmark"></span>
           </label>
 
           <label class="container bleu"><span class="show-for-sr">bleu</span>
-            <input type="radio" id="bleu" name="couleur" value="bleu">
+            <input type="radio" id="bleu" name="couleur" value="bleu" @click="getCouleur('bleu')">
             <span class="checkmark"></span>
           </label>
 
           <label class="container violet"><span class="show-for-sr">violet</span>
-            <input type="radio" id="violet" name="couleur" value="violet">
+            <input type="radio" id="violet" name="couleur" value="violet" @click="getCouleur('violet')">
             <span class="checkmark"></span>
           </label>
         </div>
       </section>
 
-      <router-link to="/question"><input type="submit" value="Commencer" class="big_button"></router-link>
+      <input type="submit" value="Commencer" class="big_button" @click="getTeamName()">
   </form>
   </div>
 </template>
@@ -66,6 +66,19 @@ export default {
   methods: {
     getPageName: function() {
       document.querySelector('body').className = "personnalisation";
+    },
+
+    getCouleur: function(couleur) {
+      document.getElementById('app').className = couleur;
+    },
+
+    getTeamName: function() {
+      document.getElementById('app').dataset.team_name = document.getElementById('nom_equipe').value;
+      this.$router.push('question');
+    },
+
+    signInButtonPressed: function() {
+      // console.log('pressed!');
     }
   }
 }
@@ -80,7 +93,7 @@ export default {
 
 #personnalisation .subtitle {
   font-size:15px;
-  margin-bottom: 35px;
+  margin-bottom: 38px;
 }
 
 .personnalisation_form, .winning {
@@ -111,7 +124,7 @@ export default {
 input[name="nom_equipe"] {
   width:290px;
   height:57px;
-  border-radius:20px;
+  border-radius:10px;
   background-color: #e5ebed;
   border:2px solid #ffffff;
   filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.3));
@@ -159,6 +172,8 @@ input[name="nom_equipe"] {
   width: 30px;
   border-radius: 50%;
   background: linear-gradient(transparent, rgba(0,0,0,0.2));
+  filter: drop-shadow(0px 0px 10px rgba(0,0,0,0));
+  transition: filter .2s ease-in-out;
 }
 
 .container.vert .checkmark {
@@ -185,8 +200,8 @@ input[name="nom_equipe"] {
   background-color: #9a5ddf;
 }
 
-.container:hover input ~ .checkmark {
-  /* background-color: #ccc; */
+.container:hover input ~ .checkmark, .container:focus input ~ .checkmark {
+  filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.3));
 }
 
 .container input:checked ~ .checkmark {
@@ -196,17 +211,19 @@ input[name="nom_equipe"] {
 .checkmark::after {
   content: "";
   position: absolute;
-  display: none;
-}
-
-.container input:checked ~ .checkmark::after {
-  display: block;
+  opacity:0;
   border:2px solid #ffffff;
   width:32px;
   height:32px;
   border-radius:50%;
   top:-3px;
   left:-3px;
+  display:block;
+  transition: opacity .3s ease-in-out;
+}
+
+.container input:checked ~ .checkmark::after, .container input:hover ~ .checkmark::after {
+  opacity:1;
 }
 
 input[type="submit"] {
@@ -216,5 +233,11 @@ input[type="submit"] {
   font-size:20px;
   font-family:'fjalla_regular', sans-serif;
   cursor:pointer;
+  border:none;
+  transition:opacity .3s ease-in-out;
+}
+
+input[type="submit"]:hover, input[type="submit"]:focus {
+  opacity:0.9;
 }
 </style>

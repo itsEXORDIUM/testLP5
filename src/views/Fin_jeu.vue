@@ -4,7 +4,7 @@
 
     <div class="winning">
       <section class="equipe">
-        <p class="title_label">Nom de l'équipe</p>
+        <p class="title_label">{{team_name}}</p>
         <Tapis/>
       </section>
 
@@ -12,8 +12,8 @@
         <p class="title_label">Résultats</p>
 
         <ul>
-          <li><span class="points">4 240 pts</span> | <span class="temps">41:35</span></li>
-          <li>Bonnes réponses :  27 / 39</li>
+          <li><span class="points">{{team_points}} pts</span> | <span class="temps">{{timer}}</span></li>
+          <li>Bonnes réponses :  {{good_answer}} / {{nb_questions}}</li>
         </ul>
       </section>
     </div>
@@ -27,6 +27,15 @@ export default {
   name: 'Fin_Jeu',
   components: {
     Tapis
+  },
+  data() {
+    return { 
+      team_points: parseInt(document.getElementById('app').dataset.team_points),
+      good_answer: parseInt(document.getElementById('app').dataset.good_answer),
+      nb_questions: parseInt(document.getElementById('app').dataset.nb_questions),
+      timer: document.getElementById('app').dataset.time,
+      team_name: document.getElementById('app').dataset.team_name
+    }
   },
   mounted() {
     this.getPageName();

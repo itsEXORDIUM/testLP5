@@ -3,9 +3,9 @@
     <router-link to="/" id="logo"><img src="../assets/logo.png" alt="Laboratoire"></router-link>
     <ul class="barre_infos">
       <li class="equipe"><Tapis/></li>
-      <li class="points">240 pts</li>
-      <li class="temps">01:35</li>
-      <li class="nb_questions">3 / 39</li>
+      <li class="points">{{teampoints}} pts</li>
+      <li class="temps">{{minutes}}:{{seconds}}</li>
+      <li class="nb_questions">{{currentquestion}} / {{nbquestions}}</li>
     </ul>
   </header>
 </template>
@@ -16,6 +16,52 @@ export default {
   name: 'Header',
   components: {
     Tapis
+  },
+  data() {
+    return { 
+      currentquestion: parseInt(document.getElementById('app').dataset.current_question),
+      nbquestions: parseInt(document.getElementById('app').dataset.nb_questions),
+      teampoints: parseInt(document.getElementById('app').dataset.team_points),
+      minutes: 0,
+      seconds: 0
+    }
+  },
+  mounted() {
+  },
+  updated(){
+    this.$nextTick(()=>{
+      this.getDatas();
+      this.timer();
+    })
+  },
+  methods: {
+    getDatas: function() {
+      this.currentquestion = parseInt(document.getElementById('app').dataset.current_question);
+      this.teampoints = parseInt(document.getElementById('app').dataset.team_points);
+      this.nbquestions = parseInt(document.getElementById('app').dataset.nb_questions);
+    },
+
+    timer: function() {
+      var seconds = 0;
+      var minutes = 0;
+
+      setInterval(() => {
+        var secondes_brutes = seconds++;
+
+        if(secondes_brutes < 10) {
+          this.seconds = '0' + secondes_brutes;
+        } else {
+          this.seconds = secondes_brutes;
+        }
+
+        if(secondes_brutes >= 60) {
+          seconds = 0;
+          minutes = minutes + 1;
+          this.seconds = seconds;
+          this.minutes = minutes;
+        }        
+      }, 1000);
+    }
   }
 }
 </script>
@@ -32,6 +78,7 @@ header .barre_infos {
 
 a#logo img {
   width:130px;
+  transition:all .3s ease-in-out;
 }
 
 body.questionnaire header {
